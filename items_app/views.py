@@ -1,11 +1,22 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponseRedirect, Http404
 from rest_framework.parsers import JSONParser
+from rest_framework import viewsets, permissions
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import LaptopsModel
-from .serializers import LaptopSerializer
+from .serializers import UserSerializer, LaptopSerializer
 
 # Create your views here.
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    
 @csrf_exempt
 def LaptopsView(request):
     if request.method == 'GET':
